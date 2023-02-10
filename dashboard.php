@@ -79,7 +79,6 @@ if (isset($_POST['create'])) {
                     <td><?php echo $user['email']; ?></td>
                     <td>
                         <button>Edit</button>
-                        <a href="?delete=<?php echo $user['id']; ?>">Delete</a>
                     </td>
                 </tr>
             <?php } ?>
