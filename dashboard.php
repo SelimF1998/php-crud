@@ -5,7 +5,7 @@ $db = DBconnection::getInstance();
 $conn = $db->get();
 $username = $_SESSION['username'];
 
-$sql = "SELECT firstname, lastname, username, email from userlist";
+$sql = "SELECT id, firstname, lastname, username, email from userslist";
 $stmt = $conn->prepare($sql);
 $stmt->execute();
 $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -15,10 +15,25 @@ if (isset($_POST['create'])) {
     $lastname = $_POST['lastname'];
     $username = $_POST['username'];
     $email = $_POST['email'];
-    $sql = "INSERT INTO userlist (firstname, lastname, username, email) VALUES ('$firstname', '$lastname', '$username', '$email')";
+    $sql = "INSERT INTO userslist (firstname, lastname, username, email) VALUES ('$firstname', '$lastname', '$username', '$email')";
     $stmt = $conn->prepare($sql);
     $stmt->execute();
+    header("Location: dashboard.php");
     echo "Record created successfully.";
+
+    exit;
+}
+
+if (isset($_GET['delete_id'])) {
+    $delete_id = $_GET['delete_id'];
+
+    // Prepare and execute the DELETE statement
+    $stmt = $conn->prepare("DELETE FROM userslist WHERE id = :delete_id");
+    $stmt->bindParam(':delete_id', $delete_id);
+    $stmt->execute();
+
+    header("Location: dashboard.php");
+    exit;
 }
 
 
@@ -54,15 +69,16 @@ if (isset($_POST['create'])) {
     </form>
     <br>
     <br>
-    <form method="POST">
+    <form>
         <input type="text" name="search" placeholder="Search">
         <input type="submit" name="search" value="Search">
-    </form>
+    </form method="post">
     <br>
     <br>
     <table>
         <thead>
             <tr>
+                <th>#</th>
                 <th>First Name</th>
                 <th>Last Name</th>
                 <th>Username</th>
@@ -73,13 +89,16 @@ if (isset($_POST['create'])) {
         <tbody>
             <?php foreach ($users as $user) { ?>
                 <tr>
+                    <td><?php echo $user['id']; ?></td>
                     <td><?php echo $user['firstname']; ?></td>
                     <td><?php echo $user['lastname']; ?></td>
                     <td><?php echo $user['username']; ?></td>
                     <td><?php echo $user['email']; ?></td>
                     <td>
-                        <button>Edit</button>
+                        <a href="dashboard.php?delete_id=<?php echo $user['id']; ?>">Delete</a>
+                        <a href="edit.php">Edit</a>
                     </td>
+
                 </tr>
             <?php } ?>
         </tbody>
