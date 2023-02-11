@@ -5,11 +5,13 @@ $db = DBconnection::getInstance();
 $conn = $db->get();
 $username = $_SESSION['username'];
 
+// table display
 $sql = "SELECT id, firstname, lastname, username, email from userslist";
 $stmt = $conn->prepare($sql);
 $stmt->execute();
 $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+// add crud
 if (isset($_POST['create'])) {
     $firstname = $_POST['firstname'];
     $lastname = $_POST['lastname'];
@@ -24,6 +26,7 @@ if (isset($_POST['create'])) {
     exit;
 }
 
+// delete crud
 if (isset($_GET['delete_id'])) {
     $delete_id = $_GET['delete_id'];
 
@@ -34,6 +37,16 @@ if (isset($_GET['delete_id'])) {
 
     header("Location: dashboard.php");
     exit;
+}
+
+// search with php
+if(isset($_POST['search_query'])) {
+    $search_query = $_POST['search_query'];
+
+    $sql = "SELECT id, firstname, lastname, username, email from userslist WHERE firstname LIKE '%$search_query%' OR lastname LIKE '%$search_query%' OR username LIKE '%$search_query%' OR email LIKE '%$search_query%'";
+    $stmt = $conn->prepare($sql);
+    $stmt->execute();
+    $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
 
@@ -69,8 +82,8 @@ if (isset($_GET['delete_id'])) {
     </form>
     <br>
     <br>
-    <form>
-        <input type="text" name="search" placeholder="Search">
+    <form method="post">
+        <input type="text" name="search_query" placeholder="Search">
         <input type="submit" name="search" value="Search">
     </form method="post">
     <br>
