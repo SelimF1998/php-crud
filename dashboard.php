@@ -40,7 +40,7 @@ if (isset($_GET['delete_id'])) {
 }
 
 // search with php
-if(isset($_POST['search_query'])) {
+if (isset($_POST['search_query'])) {
     $search_query = $_POST['search_query'];
 
     $sql = "SELECT id, firstname, lastname, username, email from userslist WHERE firstname LIKE '%$search_query%' OR lastname LIKE '%$search_query%' OR username LIKE '%$search_query%' OR email LIKE '%$search_query%'";
@@ -48,8 +48,6 @@ if(isset($_POST['search_query'])) {
     $stmt->execute();
     $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
-
-
 ?>
 
 <!DOCTYPE html>
@@ -81,12 +79,10 @@ if(isset($_POST['search_query'])) {
         <input type="submit" name="create" value="Add">
     </form>
     <br>
-    <br>
     <form method="post">
         <input type="text" name="search_query" placeholder="Search">
         <input type="submit" name="search" value="Search">
     </form method="post">
-    <br>
     <br>
     <table>
         <thead>
@@ -115,11 +111,6 @@ if(isset($_POST['search_query'])) {
                 </tr>
             <?php } ?>
         </tbody>
-
-
-
-
-
     </table>
     <a href="index.php">Logout</a>
 </body>
